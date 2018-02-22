@@ -3,15 +3,14 @@
 version: 2
 jobs:
   install:
+    working_directory: ~/testing-circle-ci
+
     docker:
       # specify the version you desire here
       - image: circleci/node:8.5.0
 
-    working_directory: ~/testing-circle-ci
-
     steps:
       - checkout
-
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -25,7 +24,6 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-
   build:
     docker:
       # specify the version here
