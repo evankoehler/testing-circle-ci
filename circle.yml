@@ -1,8 +1,8 @@
-# Evans CircleCI 2.0 configuration file
+# CircleCI 2.0 configuration file
 
 version: 2
 jobs:
-  build:
+  install:
     docker:
       # specify the version you desire here
       - image: circleci/node:8.5.0
@@ -26,6 +26,11 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
+  build:
+    docker:
+      # specify the version here
+      - image: circleci/node:8.5.0
+
       # run production build!
       - run: npm run build
 
@@ -33,3 +38,15 @@ jobs:
           key: v1-dist-{{ .Environment.CIRCLE_BRANCH }}-{{ .Environment.CIRCLE_SHA1 }}
           paths:
               - dist
+
+workflows:
+  version: 2
+  install_and_build:
+    jobs:
+      - install
+      - build:
+          requires:
+            - install
+          filters:
+            branches:
+              only: master
