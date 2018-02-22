@@ -2,7 +2,7 @@
 
 version: 2
 jobs:
-  install:
+  build:
     working_directory: ~/testing-circle-ci
 
     docker:
@@ -24,7 +24,7 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-  build:
+  production:
     docker:
       # specify the version here
       - image: circleci/node:8.5.0
@@ -39,12 +39,12 @@ jobs:
 
 workflows:
   version: 2
-  install_and_build:
+  build_and_production:
     jobs:
-      - install
-      - build:
+      - build
+      - production:
           requires:
-            - install
+            - build
           filters:
             branches:
               only: master
